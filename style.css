@@ -33,3 +33,7 @@ body {
 .tetris .O {
     background: rgb(224, 174, 8);
 }
+
+.tetris .L {
+    background: rgb(153, 5, 79);
+}
