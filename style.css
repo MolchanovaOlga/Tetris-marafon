@@ -12,7 +12,7 @@ body {
 }
 
 .tetris {
-    background-color: rgb(23, 75, 25);
+    background-color: rgb(4, 14, 4);
     padding: 0.5vh;
     border-radius: 0.5vh;
     display: grid;
@@ -27,13 +27,13 @@ body {
     background-color: rgba(rgb(128, 128, 134));
     border-radius: 0.3hv;
     box-shadow: 
-    inset 2px 2px 2px rgb(66, 66, 78);
+    inset 2px 2px 2px rgba(31, 46, 38, 0.582);
 }
 
 .tetris .O {
-    background: rgb(224, 174, 8);
+    background: rgb(196, 150, 0);
 }
 
 .tetris .L {
-    background: rgb(153, 5, 79);
+    background: rgb(158, 44, 101);
 }
