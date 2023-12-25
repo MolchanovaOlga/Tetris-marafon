@@ -1,7 +1,7 @@
 const PLAYFIELD_COLUMNS = 10;
 const PLAYFIELD_ROWS = 20;
 
-const TETROMINO_NAMES = ['O', 'L'];
+const TETROMINO_NAMES = ['O', 'L', 'I', 'S', 'T', 'Z', 'J'];
 
 const TETROMINOES = {
     'O': [
@@ -12,7 +12,33 @@ const TETROMINOES = {
         [0, 0, 1],
         [1, 1, 1],
         [0, 0, 0],
-    ]
+    ],
+    'I': [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+    ],
+    'S': [
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
+    ],
+    'T': [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0],
+    ],
+    'Z': [
+        [0, 1, 0],
+        [1, 1, 0],
+        [1, 0, 0],
+    ],
+    'J': [ 
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 0, 1],
+    ],
 };
 
 let playfield;
@@ -32,11 +58,15 @@ function  generatePlayfield() {
                                         .map(() => new Array(PLAYFIELD_COLUMNS).fill(0));
 }
 
+function getRandomFigure(arr) {
+    const randomIndex = Math.round(Math.random() * arr.length);
+    return arr[randomIndex];
+}
 
 function generateTetromino() {
-    const nameTetro = 'L';
+    const nameTetro = getRandomFigure(TETROMINO_NAMES);      //рандом фігури
     const matrixTetro = TETROMINOES[nameTetro];
-    const columnTetro = 5;
+    const columnTetro = Math.round((PLAYFIELD_COLUMNS - TETROMINOES[nameTetro].length) / 2);          //відцентрування фігури
     const rowTetro = 3;
 
     tetromino = {
@@ -45,6 +75,7 @@ function generateTetromino() {
         column: columnTetro,
         row: rowTetro
     }
+   // console.log(nameTetro);
 }
 
 generatePlayfield();
@@ -149,7 +180,7 @@ function placeTetromino () {
             if (!tetromino.matrix[row][column]) continue;
 
             playfield[tetromino.row + row][tetromino.column + 
-                column] = TETROMINO_NAMES[0];
+                column] = tetromino.name;
         }
     }
     generateTetromino();
