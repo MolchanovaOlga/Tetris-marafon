@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=900&family=Silkscreen&display=swap');
 * {
     margin: 0;
 }
@@ -56,4 +57,44 @@ body {
 
 .tetris .Z {
     background: rgb(179, 104, 209);
+}
+
+.scoreboard {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    background: rgb(4, 14, 4);
+    height: 8%;
+    max-width: 100%;
+    border-radius: 0.5vh;
+    margin-bottom: 10px;
+    padding: 24px;
+}
+
+.points {
+    display: flex;
+    gap: 16px;
+}
+
+.points-text {
+    color: yellow;
+    font-family: 'Silkscreen', sans-serif;
+
+}
+
+.points-number {
+    color: yellow;
+    font-family: 'Silkscreen', sans-serif;
+}
+
+.game-over {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.game-over-text {
+    color: rgb(104, 53, 53);
+    font-family: 'Silkscreen', sans-serif;
 }

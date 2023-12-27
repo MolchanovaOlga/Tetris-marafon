@@ -66,7 +66,7 @@ function getRandomFigure(arr) {
 function generateTetromino() {
     const nameTetro = getRandomFigure(TETROMINO_NAMES);                                           //рандом фігури
     const matrixTetro = TETROMINOES[nameTetro];
-    const columnTetro = Math.round((PLAYFIELD_COLUMNS - TETROMINOES[nameTetro].length) / 2);     //відцентрування фігури
+    const columnTetro = Math.round(PLAYFIELD_COLUMNS / 2 - TETROMINOES[nameTetro].length / 2);     //відцентрування фігури
     const rowTetro = 3;
 
     tetromino = {
@@ -100,11 +100,10 @@ function drawTetromino() {
 
     for (let row = 0; row < tetrominoMatrixSize; row += 1) {
         for (let column = 0; column < tetrominoMatrixSize; column += 1) {
-
+    
             if(tetromino.matrix[row][column] == 0){ continue }
             const cellIndex = convertPositionToIndex(tetromino.
                 row + row, tetromino.column + column);
-
             cells[cellIndex].classList.add(name);
         }
     }
@@ -116,6 +115,7 @@ function draw() {
     cells.forEach((cell) => cell.removeAttribute('class'));
     drawPlayField();
     drawTetromino();
+    console.table(playfield);
 }
 
 document.addEventListener('keydown', onKeyDown)
@@ -196,13 +196,53 @@ function placeTetromino () {
                 column] = tetromino.name;
         }
     }
+    // вираховуємо бали
+    const filledRows = findFilledRows();
+    removeFillRows(filledRows);
     generateTetromino();
+}
+
+function removeFillRows(filledRows) {
+    //filledRows.forEach(row => {
+      //  dropRowsAbove(row);
+    //})
+    for (let i = 0; i < filledRows.length; i += 1) {
+        const row = filledRows[i]
+        dropRowsAbove(row);
+    }
+}
+
+function dropRowsAbove(rowDelete) {
+    for (let row = rowDelete; row > 0; row -= 1) {
+        playfield[row] = playfield[row - 1];
+    }
+
+    playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
+}
+
+function findFilledRows() {
+    const filledRows = [];
+    for (let row = 0; row < PLAYFIELD_ROWS; row += 1) {
+        let filledColumns = 0;
+        for (let column = 0; column < PLAYFIELD_COLUMNS; column += 1) {
+            if (playfield[row][column] !== 0) {
+                filledColumns += 1;
+            }
+        }
+        if (PLAYFIELD_COLUMNS == filledColumns) {
+            filledRows.push(row);
+        }
+    }
+    return filledRows;
 }
 
 function  rotateTetramino() {
     const oldMatrix = tetromino.matrix;
     const rotatedMatrix = rotateMatrix(tetromino.matrix);
     tetromino.matrix = rotatedMatrix;
+    if (isValid()){
+        tetromino.matrix = oldMatrix;
+    }
     draw();
 }
 
