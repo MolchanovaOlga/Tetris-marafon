@@ -43,6 +43,9 @@ const TETROMINOES = {
 
 let playfield;
 let tetromino;
+let timeOutId;
+let requestId;
+let score = 0;
 
 function convertPositionToIndex(row, column) {
     return row * PLAYFIELD_COLUMNS + column;
@@ -67,7 +70,7 @@ function generateTetromino() {
     const nameTetro = getRandomFigure(TETROMINO_NAMES);                                           //рандом фігури
     const matrixTetro = TETROMINOES[nameTetro];
     const columnTetro = Math.round(PLAYFIELD_COLUMNS / 2 - TETROMINOES[nameTetro].length / 2);     //відцентрування фігури
-    const rowTetro = 3;
+    const rowTetro = -2;
 
     tetromino = {
         name: nameTetro,
@@ -75,7 +78,6 @@ function generateTetromino() {
         column: columnTetro,
         row: rowTetro
     }
-   // console.log(nameTetro);
 }
 
 generatePlayfield();
@@ -100,8 +102,8 @@ function drawTetromino() {
 
     for (let row = 0; row < tetrominoMatrixSize; row += 1) {
         for (let column = 0; column < tetrominoMatrixSize; column += 1) {
-    
             if(tetromino.matrix[row][column] == 0){ continue }
+            if(tetromino.row + row < 0) { continue }
             const cellIndex = convertPositionToIndex(tetromino.
                 row + row, tetromino.column + column);
             cells[cellIndex].classList.add(name);
@@ -115,7 +117,6 @@ function draw() {
     cells.forEach((cell) => cell.removeAttribute('class'));
     drawPlayField();
     drawTetromino();
-    console.table(playfield);
 }
 
 document.addEventListener('keydown', onKeyDown)
@@ -183,7 +184,7 @@ function isOutsideOfGameBoard(row, column) {
 }
 
 function hasCollisions (row, column) {                                   
-    return  playfield[tetromino.row + row][tetromino.column + column]   // щоб матриці з 0-ми перекривалися
+    return  playfield[tetromino.row + row]?.[tetromino.column + column]   // щоб матриці з 0-ми перекривалися
 }
 
 function placeTetromino () {
@@ -202,6 +203,26 @@ function placeTetromino () {
     generateTetromino();
 }
 
+function countScore(destroyRows) {
+    switch(destroyRows) {
+        case 1:
+            score += 10;
+            break;
+        case 2:
+            score += 30;
+            break;
+        case 3:
+            score += 50;
+            break;
+        case 4:
+            score += 100;
+            break;
+        default:
+            score += 0;
+    }
+    document.querySelector('.score').innerHTML = score;
+}
+
 function removeFillRows(filledRows) {
     //filledRows.forEach(row => {
       //  dropRowsAbove(row);
@@ -210,6 +231,7 @@ function removeFillRows(filledRows) {
         const row = filledRows[i]
         dropRowsAbove(row);
     }
+    countScore(filledRows.length);
 }
 
 function dropRowsAbove(rowDelete) {
@@ -235,6 +257,31 @@ function findFilledRows() {
     }
     return filledRows;
 }
+
+// вільне падіння фігури
+
+function moveDown() {
+    moveTetrominoDown();
+    draw();
+    stopLoop();
+    startLoop();
+}
+
+function startLoop() {
+    timeOutId = setTimeout(
+        () => (requestId = requestAnimationFrame(moveDown)),
+        700
+    );
+}
+
+startLoop();
+
+function stopLoop() {
+    cancelAnimationFrame(requestId);
+    timeOutId = clearTimeout(timeOutId);
+}
+
+// перевертання фігури
 
 function  rotateTetramino() {
     const oldMatrix = tetromino.matrix;
